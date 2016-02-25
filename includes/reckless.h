@@ -16,4 +16,10 @@
 #define CRLF "\r\n"
 #define BUFFER_SIZE 4096
 
+typedef struct s_extensions
+{
+	char		*ext;
+	char		*filetype;
+}				t_extensions;
+
 # endif
