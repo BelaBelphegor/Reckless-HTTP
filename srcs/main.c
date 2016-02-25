@@ -10,12 +10,46 @@ static void		web(int fd, int hit)
 	static char		buffer[BUFFER_SIZE + 1];
 	int				ret;
 	int				file_fd;
+	int				i;
+	int				j;
 
 	ret = read(fd, buffer, BUFFER_SIZE);
 	if (ret == 0 || ret == -1)
 		dprintf(2, "Failed to read browser request.\n");
 	if (ret > 0 && ret < BUFFER_SIZE)
 		buffer[ret] = 0;
+	i = 0;
+	while (i < ret)
+	{
+		if (buffer[i] == '\r' || buffer[i] == '\n')
+			buffer[i] = '*';
+		i++;
+	}
+	
+	// Method used on query.
+	if (strncmp(buffer, "GET ", 4) && strncmp(buffer, "get ", 4))
+		dprintf(2, "Failed only get is supported actually");
+	
+	/* Add (null terminated) after the second space to ignore extra stuff. */
+	i = 4;
+	while (i < BUFFER_SIZE)
+	{
+		if (buffer[i] == ' ')
+			buffer[i] = 0;
+		i++;
+	}
+	j = 0;
+	while (j < i - 1)
+	{
+		if (buffer[j] == '.' && buffer[j + 1] == '.')
+		{
+			perror("Parent directory path names not supported");
+			(void)exit(-1);
+		}
+		j++;
+	}
+
+
 	if ((file_fd = open("index.html", O_RDONLY)) == -1)
 		dprintf(2, "Failed to open file\n");
 	(void)sprintf(buffer, "HTTP/1.0 200 OK\r\nServer:Reckless/0.0.1\r\nContent-Type: %s\r\n\r\n", "text/html");
