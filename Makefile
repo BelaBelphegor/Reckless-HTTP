@@ -1,5 +1,6 @@
-NAME		= reckless
-SRCS		= main.c
+NAME		= ./bin/reckless
+SRCS		= main.c \
+			  server.c
 SRCSPATH	= ./srcs/
 INCLUDES	= ./includes/
 CC			= clang

@@ -20,7 +20,7 @@ static void		ft_usage(void)
 	dprintf(1, "Usage: ./reckless [PORT]\n");
 }
 
-static void		web(int fd, int hit)
+void		web(int fd, int hit)
 {
 	static char		buffer[BUFFER_SIZE + 1];
 	int				ret;
@@ -91,7 +91,7 @@ static void		web(int fd, int hit)
 	}
 	if ((file_fd = open(&buffer[5], O_RDONLY)) == -1)
 		dprintf(2, "Failed to open file\n");
-	(void)sprintf(buffer, "HTTP/1.0 200 OK\r\nServer:Reckless/0.0.1\r\nContent-Type: %s\r\n\r\n", "text/html");
+	(void)sprintf(buffer, "HTTP/1.0 200 OK\r\nServer:Reckless/0.0.1\r\nContent-Type: %s\r\n\r\n", fstr);
 	write(fd, buffer, strlen(buffer));
 	
 	while ((ret = read(file_fd, buffer, BUFFER_SIZE)) > 0)
@@ -101,37 +101,37 @@ static void		web(int fd, int hit)
 	(void)exit(1);
 }
 
+
 int				main(int argc, char **argv)
 {
-	int							pid;
+/*	int							pid;
 	int							listen_fd;
 	int							socket_fd;
 	int							port;
 	static struct sockaddr_in	cli_addr;
-	static struct sockaddr_in	serv_addr;
+	static struct sockaddr_in	serv_addr:*/
 	int							curr;
-	unsigned int				socklen;
+	/*unsigned int				socklen; */
 	(void)argv;
 	if (argc != 2)
 	{
 		ft_usage();
 		exit(-1);
 	}
-
 	curr = 0;
 	while (curr < 32)
 	{
 		(void)close(curr);
 		curr++;
 	}
-	if ((listen_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-		dprintf(2, "Unable to set socet.\n");
+	/*if ((listen_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+		dprintf(2, "Unable to set socket.\n");
 	port = atoi(argv[1]);
 	if (port < 0 || port > 60000)
 		dprintf(2, "Invalid port number\n");
 	serv_addr.sin_family = AF_INET;
-	//serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	//serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	serv_addr.sin_port = htons(port);
 	if ((bind(listen_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr))) < 0)
 		dprintf(2, "Unable to bind server socket\n");
@@ -165,6 +165,7 @@ int				main(int argc, char **argv)
 			}
 		}
 		curr++;
-	}
+	}*/
+	start(argv);
 	return (0);
 }
