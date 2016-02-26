@@ -1,6 +1,8 @@
 NAME		= ./bin/reckless
 SRCS		= main.c \
-			  server.c
+			  server.c \
+			  http_request.c \
+			  logger.c
 SRCSPATH	= ./srcs/
 INCLUDES	= ./includes/
 CC			= clang

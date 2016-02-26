@@ -27,23 +27,28 @@ void		web(int fd, int hit)
 	int				file_fd;
 	int				i;
 	int				j;
+	t_http_request	*thr;
 
 	ret = read(fd, buffer, BUFFER_SIZE);
 	if (ret == 0 || ret == -1)
-		dprintf(2, "Failed to read browser request.\n");
+		logger(L_ERROR, "Unable to read HTTP Request on client socket", "", 0);
 	if (ret > 0 && ret < BUFFER_SIZE)
 		buffer[ret] = 0;
 	i = 0;
+	
+	thr = create_http_request();
+	init_http_request(thr, buffer);
+	destroy_http_request(thr);
+
 	while (i < ret)
 	{
 		if (buffer[i] == '\r' || buffer[i] == '\n')
 			buffer[i] = '*';
 		i++;
-	}
-	
+	}	
 	// Method used on query.
 	if (strncmp(buffer, "GET ", 4) && strncmp(buffer, "get ", 4))
-		dprintf(2, "Failed only get is supported actually");
+		logger(L_SORRY, "Failed only get is supported actually", "", 0);
 	
 	/* Add (null terminated) after the second space to ignore extra stuff. */
 	i = 4;
@@ -104,15 +109,8 @@ void		web(int fd, int hit)
 
 int				main(int argc, char **argv)
 {
-/*	int							pid;
-	int							listen_fd;
-	int							socket_fd;
-	int							port;
-	static struct sockaddr_in	cli_addr;
-	static struct sockaddr_in	serv_addr:*/
-	int							curr;
-	/*unsigned int				socklen; */
-	(void)argv;
+	int			curr;
+
 	if (argc != 2)
 	{
 		ft_usage();
@@ -124,48 +122,6 @@ int				main(int argc, char **argv)
 		(void)close(curr);
 		curr++;
 	}
-	/*if ((listen_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-		dprintf(2, "Unable to set socket.\n");
-	port = atoi(argv[1]);
-	if (port < 0 || port > 60000)
-		dprintf(2, "Invalid port number\n");
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	//serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	serv_addr.sin_port = htons(port);
-	if ((bind(listen_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr))) < 0)
-		dprintf(2, "Unable to bind server socket\n");
-	if (listen(listen_fd, 64) < 0)
-		dprintf(2, "Unable to listen on server socket\n");
-
-	curr = 1;
-	while (curr)
-	{
-		socklen = sizeof(cli_addr);
-		if ((socket_fd = accept(listen_fd, (struct sockaddr *)&cli_addr, &socklen)) < 0)
-		{
-			dprintf(2, "Unable to accept client\n");
-			perror(NULL);
-		}
-		if ((pid = fork()) < 0)
-		{
-			dprintf(2, "Unable to fork new client\n");
-			(void)exit(-1);
-		}
-		else
-		{
-			if (pid == 0)
-			{
-				close(listen_fd);
-				web(socket_fd, curr);
-			}
-			else
-			{
-				close(socket_fd);
-			}
-		}
-		curr++;
-	}*/
 	start(argv);
 	return (0);
 }
