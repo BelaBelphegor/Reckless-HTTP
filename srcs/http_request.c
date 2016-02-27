@@ -6,11 +6,12 @@
 /*   By: tiboitel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/26 18:00:27 by tiboitel          #+#    #+#             */
-/*   Updated: 2016/02/26 20:00:29 by tiboitel         ###   ########.fr       */
+/*   Updated: 2016/02/27 05:05:57 by tiboitel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <reckless.h>
+#include <reckless/http.h>
 
 t_http_request		*create_http_request(void)
 {
@@ -70,8 +71,6 @@ int				read_header_http_request(t_http_request *thr, char *buffer)
 	while (strncmp(buffer + i, "HTTP/", strlen("HTTP/")) && i < strlen(buffer))
 		i++;
 	thr->http_version = strndup(buffer + i, 8);
-	// Delet after debug.
-	show_http_request(thr);
 	/*
 	 * Get position on the second space.
 	 */
@@ -83,11 +82,18 @@ int				read_header_http_request(t_http_request *thr, char *buffer)
 	{
 		if (buffer[j] == '.' && buffer[j + 1] == '.')
 		{
-			perror("Parent directory path is not supported ");
+			logger(L_LOG, "Parent directory path is not supported ", &buffer[j], 0);
 			return (-1);
 		}
 		j++;
 	}
+	/*
+	 * Convert no filename to index file.
+	 */
+	if (!strncmp(&buffer[0], "GET / ", 6) || !strncmp(&buffer[0], "GET / ", 6))
+		thr->request_uri = strdup("index.html");
+	else
+		thr->request_uri = strndup(buffer + 5, j - 4);
 	return (1);
 }
 

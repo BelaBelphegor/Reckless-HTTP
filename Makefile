@@ -1,4 +1,4 @@
-NAME		= ./bin/reckless
+NAME		= ./reckless
 SRCS		= main.c \
 			  server.c \
 			  http_request.c \

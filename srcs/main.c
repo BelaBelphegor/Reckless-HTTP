@@ -1,4 +1,5 @@
 #include <reckless.h>
+#include <reckless/http.h>
 
 t_extensions	extensions[] = 
 {
@@ -38,7 +39,6 @@ void		web(int fd, int hit)
 	
 	thr = create_http_request();
 	init_http_request(thr, buffer);
-	destroy_http_request(thr);
 
 	while (i < ret)
 	{
@@ -73,6 +73,7 @@ void		web(int fd, int hit)
 	size_t		buffer_length;
 	size_t		len;
 	char		*fstr;
+	char		filepath[256];
 
 	if (!strncmp(&buffer[0], "GET /\0", 6) || !strncmp(&buffer[0], "get /\0", 6))
 	(void)strcpy(buffer, "GET /index.html");
@@ -94,13 +95,22 @@ void		web(int fd, int hit)
 	{
 		perror("File extension type not supported yet.");
 	}
-	if ((file_fd = open(&buffer[5], O_RDONLY)) == -1)
-		dprintf(2, "Failed to open file\n");
-	(void)sprintf(buffer, "HTTP/1.0 200 OK\r\nServer:Reckless/0.0.1\r\nContent-Type: %s\r\n\r\n", fstr);
+	bzero(filepath, 256);
+	strcat(filepath, APPS_DIRECTORY);
+	strcat(filepath, thr->request_uri);
+	logger(L_LOG, "filepath", filepath, 0);
+	if ((file_fd = open(filepath, O_RDONLY)) == -1)
+	{
+		(void)sprintf(buffer, "%s 404 Not Found\r\nServer:Reckless/0.0.1\r\nKeep-Alive: timeout=30, max=98\r\nConnection: Keep-Alive\r\nContent-type: text/html; charset=iso-8859-1\r\n\r\n", thr->http_version);	
+		file_fd = open(LAYOUTS_DIRECTORY"404.html", O_RDONLY);
+	}
+	else
+		(void)sprintf(buffer, "%s 200 OK\r\nServer:Reckless/0.0.1\r\nContent-Type: %s\r\n\r\n", thr->http_version, fstr);
+
 	write(fd, buffer, strlen(buffer));
-	
 	while ((ret = read(file_fd, buffer, BUFFER_SIZE)) > 0)
-		write(fd, buffer, ret);
+		write(fd, buffer, ret);	
+	destroy_http_request(thr);
 	sleep(1);	
 	close(file_fd);
 	(void)exit(1);
