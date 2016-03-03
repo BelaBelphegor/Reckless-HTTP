@@ -20,6 +20,9 @@ char		ctox(char c)
 
 char		*url_encode(char *str)
 {
+	char	*tmp;
+
+
 }
 
 char		*url_decode(char *str)
