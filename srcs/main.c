@@ -41,9 +41,10 @@ void		web(int fd, int hit)
 		buffer[ret] = 0;
 	i = 0;
 	
-	thr = create_http_request();
-	response = create_http_response();
+	thr = create_http_request();	
 	init_http_request(thr, buffer);
+	
+	response = create_http_response();
 	init_http_response(response, thr);
 
 	/* Convert no filename "/" to index file. Next check the filetype and review if we support it. */
