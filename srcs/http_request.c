@@ -90,18 +90,18 @@ int				read_header_http_request(t_http_request *thr, char *buffer)
 	/*
 	 * Convert no filename to index file.
 	 */
-	if (!strncmp(&buffer[0], "GET / ", 6) || !strncmp(&buffer[0], "GET / ", 6))
-		thr->request_uri = strdup("index.html");
-	else
-		thr->request_uri = strndup(buffer + 5, j - 4);
+	thr->request_uri = (!strncmp(&buffer[0], "GET / ", 6) || !strncmp(&buffer[0], 
+		"GET / ", 6)) ? strdup("index.html") : strndup(buffer + 5, j - 4);
 	return (1);
 }
 
-void				show_http_request(t_http_request *thr)
+void				show_http_request(const t_http_request *thr)
 {
 	if (!thr)
 		return;
-	logger(L_LOG, "#### SHOW_HTTP_REQUEST ####", "\n", 0);
+	logger(L_LOG, "###########################", "", 0);
+	logger(L_LOG, "#### SHOW_HTTP_REQUEST ####", "", 0);
+	logger(L_LOG, "###########################", "", 0);
 	if (thr->http_version)
 		logger(L_LOG, "HTTP Version" , thr->http_version, 0);
 	if (thr->request_uri)

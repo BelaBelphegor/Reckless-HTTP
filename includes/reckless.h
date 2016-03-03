@@ -19,11 +19,6 @@
 #define	APPS_DIRECTORY "www/"
 #define LAYOUTS_DIRECTORY "layouts/"
 
-typedef enum					e_http_method
-{
-	E_GET, E_HEAD, E_POST, E_PUT, E_DELETE
-}								t_http_method;
-
 typedef enum					e_log_type
 {
 	L_ERROR, L_LOG, L_SORRY

@@ -2,6 +2,7 @@ NAME		= ./reckless
 SRCS		= main.c \
 			  server.c \
 			  http_request.c \
+			  http_response.c \
 			  logger.c
 SRCSPATH	= ./srcs/
 INCLUDES	= ./includes/
