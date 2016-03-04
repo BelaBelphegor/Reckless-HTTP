@@ -3,6 +3,7 @@ SRCS		= main.c \
 			  server.c \
 			  http_request.c \
 			  http_response.c \
+			  http_url_encode.c \
 			  logger.c
 SRCSPATH	= ./srcs/
 INCLUDES	= ./includes/

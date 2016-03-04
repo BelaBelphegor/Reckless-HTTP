@@ -6,7 +6,7 @@
 /*   By: tiboitel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 01:09:17 by tiboitel          #+#    #+#             */
-/*   Updated: 2016/03/04 01:09:20 by tiboitel         ###   ########.fr       */
+/*   Updated: 2016/03/04 01:11:57 by tiboitel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char		*url_encode(char *str)
 			*ptr++ = ctox(*tmp >> 4);
 			*ptr++ = ctox(*tmp & 15);
 		}
-		*tmp++;
+		tmp++;
 	}
 	*ptr = '\0';
 	return (buffer);

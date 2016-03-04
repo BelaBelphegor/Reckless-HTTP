@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #define CRLF "\r\n"
 #define BUFFER_SIZE 8192
