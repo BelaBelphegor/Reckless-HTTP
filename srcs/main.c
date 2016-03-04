@@ -53,13 +53,13 @@ void		web(int fd, int hit)
 	char		*fstr;
 	char		filepath[256];
 
-	buffer_length = strlen(buffer);
+	buffer_length = strlen(thr->request_uri);
 	fstr = NULL;
 	i = 0;
 	while (extensions[i].ext != 0)
 	{
 		len = strlen(extensions[i].ext);
-		if (!strncmp(&buffer[buffer_length - len], extensions[i].ext, len))
+		if (!strncmp(&(thr->request_uri[buffer_length - len]), extensions[i].ext, len))
 		{
 			fstr = extensions[i].filetype;
 			break;
@@ -67,8 +67,7 @@ void		web(int fd, int hit)
 		i++;
 	}
 	if (!fstr)
-		perror("File extension type not supported yet.");
-	
+		logger(L_ERROR, "File extension is not supported on current version", thr->request_uri, 0);	
 	/*
 	 * HTTP - Response.
 	 * 1. Build filepath.
